@@ -1,33 +1,55 @@
-.navbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:black;
-  color:white;
-  padding:15px 40px;
+/* Quitamos el flex del padre para que ocupe todo el ancho */
+.navbar {
+  background: black;
+  color: white;
+  width: 100%; /* Asegura que cubra todo el ancho */
+  position: relative;
+  z-index: 10; /* Para que quede por encima de la imagen */
 }
 
-.logo h2{
-  color:#8BC34A;
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  max-width: 1400px; /* Evita que en pantallas gigantes se estire demasiado */
+  margin: 0 auto;    /* Centra el contenido */
 }
 
-.menu{
-  display:flex;
-  gap:25px;
-  list-style:none;
+.logo h2 {
+  color: #8BC34A;
+  margin: 0;
+  font-size: 1.5rem;
 }
 
-.menu li{
-  cursor:pointer;
+.menu {
+  display: flex;
+  gap: 25px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
 }
 
-.sale{
-  background:#7CB342;
-  padding:6px 12px;
-  border-radius:8px;
+.menu li {
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: color 0.3s;
 }
 
-.icons span{
-  margin-left:15px;
-  cursor:pointer;
+.menu li:hover {
+  color: #8BC34A;
+}
+
+.sale {
+  background: #7CB342;
+  padding: 6px 12px;
+  border-radius: 5px;
+  color: black;
+  font-weight: bold;
+}
+
+.icons {
+  display: flex;
+  gap: 15px;
 }
