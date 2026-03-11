@@ -1,0 +1,33 @@
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:black;
+  color:white;
+  padding:15px 40px;
+}
+
+.logo h2{
+  color:#8BC34A;
+}
+
+.menu{
+  display:flex;
+  gap:25px;
+  list-style:none;
+}
+
+.menu li{
+  cursor:pointer;
+}
+
+.sale{
+  background:#7CB342;
+  padding:6px 12px;
+  border-radius:8px;
+}
+
+.icons span{
+  margin-left:15px;
+  cursor:pointer;
+}
