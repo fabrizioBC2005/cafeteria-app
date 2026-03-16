@@ -1,6 +1,7 @@
 import { useState } from "react"
 import "./Navbar.css"
 
+
 function Navbar({ currentPage, setPage }) {
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -9,32 +10,46 @@ function Navbar({ currentPage, setPage }) {
     setMenuOpen(false)
   }
 
+  const navItems = [
+    { page: "home",     label: "Inicio" },
+    { page: "menu",     label: "Menú" },
+    { page: "reservas", label: "Reservas" },
+    { page: "blog",     label: "Blog" },
+    { page: "galeria",  label: "Galería" },
+    { page: "contact",  label: "Contacto" },
+  ]
+
   return (
     <>
       <nav className="navbar">
+
         {/* LOGO */}
         <div className="navbar-logo" onClick={() => navigate("home")}>
-          <span className="logo-icon">☕</span>
-          <span className="logo-text">CAFÉ<span className="logo-accent">ORIGEN</span></span>
+          <img
+            src="https://i.pinimg.com/1200x/f8/ef/d9/f8efd9caac201bb39588238dab435650.jpg"
+            alt="Locafe"
+            className="logo-img"
+          />
+          <span className="logo-text">LOCA<span className="logo-accent">CAFE</span></span>
         </div>
 
         {/* LINKS desktop */}
         <ul className="navbar-links">
-          {["home", "menu", "contact"].map((page) => (
+          {navItems.map(({ page, label }) => (
             <li key={page}>
               <button
                 className={`nav-btn ${currentPage === page ? "active" : ""}`}
                 onClick={() => navigate(page)}
               >
-                {page === "home" ? "Inicio" : page === "menu" ? "Menú" : "Contacto"}
+                {label}
               </button>
             </li>
           ))}
         </ul>
 
         {/* CTA desktop */}
-        <button className="navbar-cta" onClick={() => navigate("menu")}>
-          Ver Catálogo
+        <button className="navbar-cta" onClick={() => navigate("members")}>
+          ☕ Coffee Members
         </button>
 
         {/* HAMBURGER mobile */}
@@ -51,11 +66,17 @@ function Navbar({ currentPage, setPage }) {
 
       {/* MOBILE MENU overlay */}
       <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>
-        {[
-          { page: "home",    label: "Inicio" },
-          { page: "menu",    label: "Menú" },
-          { page: "contact", label: "Contacto" },
-        ].map(({ page, label }) => (
+
+        {/* Logo en mobile menu */}
+        <div className="mobile-logo">
+          <img
+            src="https://i.pinimg.com/1200x/f8/ef/d9/f8efd9caac201bb39588238dab435650.jpg"
+            alt="Locafe"
+            className="mobile-logo-img"
+          />
+        </div>
+
+        {navItems.map(({ page, label }) => (
           <button
             key={page}
             className={`mobile-nav-btn ${currentPage === page ? "active" : ""}`}
@@ -64,8 +85,8 @@ function Navbar({ currentPage, setPage }) {
             {label}
           </button>
         ))}
-        <button className="mobile-cta" onClick={() => navigate("menu")}>
-          Ver Catálogo →
+        <button className="mobile-cta" onClick={() => navigate("members")}>
+          ☕ Coffee Members →
         </button>
       </div>
     </>
