@@ -87,7 +87,7 @@ function Footer({ setPage }) {
           </ul>
           <div className="footer-location">
             <span className="location-icon">📍</span>
-            <span>Lima, Perú</span>
+            <span>Chimbote, Perú</span>
           </div>
         </div>
 
@@ -96,7 +96,7 @@ function Footer({ setPage }) {
       {/* ── BOTTOM BAR ── */}
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} Locafe. Todos los derechos reservados.</span>
-        <span className="footer-bottom-right">Hecho con ☕ en Lima</span>
+        <span className="footer-bottom-right">Hecho con ☕ en Chimbote</span>
       </div>
 
     </footer>

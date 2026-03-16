@@ -1,0 +1,472 @@
+/* ── VARIABLES ── */
+:root {
+  --green:       #4e6b38;
+  --green-light: #8BC34A;
+  --green-pale:  #f0f5ea;
+  --green-soft:  #e0eccd;
+  --white:       #ffffff;
+  --black:       #111111;
+  --gray:        #555555;
+  --gray-light:  #e8e8e8;
+}
+
+/* ── ANIMACIONES ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes popIn {
+  0%   { opacity: 0; transform: scale(0.5); }
+  70%  { transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* ── PAGE ── */
+.register-page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  background: var(--white);
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ══════════════════════════════════════ */
+/* LADO IZQUIERDO                         */
+/* ══════════════════════════════════════ */
+.register-left {
+  position: relative;
+  background: var(--green-pale);
+  border-right: 3px solid var(--green-soft);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.register-left-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(78,107,56,0.12) 0%, transparent 60%),
+    radial-gradient(circle at 80% 20%, rgba(139,195,74,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.register-left-content {
+  position: relative;
+  z-index: 1;
+  padding: 60px 52px;
+  animation: fadeUp 0.7s ease both;
+}
+
+.register-eyebrow {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--green);
+  margin-bottom: 24px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.register-left-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 58px;
+  line-height: 0.92;
+  letter-spacing: 3px;
+  color: var(--black);
+  margin-bottom: 20px;
+}
+
+.register-left-title span { color: var(--green); }
+
+.register-left-sub {
+  font-size: 15px;
+  color: var(--gray);
+  line-height: 1.8;
+  max-width: 340px;
+  margin-bottom: 44px;
+}
+
+/* Steps preview */
+.register-steps-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.step-preview {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--green-soft);
+}
+
+.step-preview:last-child { border-bottom: none; }
+
+.step-preview-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 2px;
+  color: var(--green);
+  width: 42px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.step-preview-label {
+  font-size: 15px;
+  color: var(--black);
+  font-weight: 500;
+}
+
+/* ══════════════════════════════════════ */
+/* LADO DERECHO                           */
+/* ══════════════════════════════════════ */
+.register-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 40px;
+  background: var(--white);
+  animation: fadeUp 0.7s ease 0.1s both;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Logo */
+.register-logo {
+  cursor: pointer;
+  display: inline-block;
+  margin-bottom: 24px;
+}
+
+.register-logo-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 4px;
+  color: var(--black);
+}
+
+.register-logo-accent { color: var(--green); }
+
+/* Header */
+.register-card-header { margin-bottom: 28px; }
+
+.register-card-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  letter-spacing: 3px;
+  color: var(--black);
+  margin-bottom: 6px;
+}
+
+.register-card-sub {
+  font-size: 15px;
+  color: var(--gray);
+}
+
+/* Google */
+.google-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: var(--white);
+  border: 1px solid var(--gray-light);
+  color: var(--black);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 13px 20px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  margin-bottom: 24px;
+}
+
+.google-btn:hover {
+  border-color: #aaa;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  transform: translateY(-1px);
+}
+
+/* Divider */
+.register-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.register-divider span {
+  flex: 1;
+  height: 1px;
+  background: var(--gray-light);
+}
+
+.register-divider p {
+  font-size: 12px;
+  color: #aaa;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* Form */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.register-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.register-field label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--gray);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.register-field input {
+  background: var(--white);
+  border: 1px solid var(--gray-light);
+  color: var(--black);
+  padding: 12px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+  border-radius: 2px;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.register-field input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(78,107,56,0.08);
+}
+
+.register-field input::placeholder { color: #bbb; }
+
+.register-field input.input-error {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231,76,60,0.08);
+}
+
+.field-error {
+  font-size: 12px;
+  color: #e74c3c;
+  letter-spacing: 0.3px;
+}
+
+/* Password */
+.password-wrap {
+  position: relative;
+}
+
+.password-wrap input { padding-right: 44px; }
+
+.toggle-pass {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.toggle-pass:hover { opacity: 1; }
+
+/* Strength bar */
+.strength-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.strength-bar {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.strength-segment {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  transition: background 0.3s ease;
+}
+
+.strength-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  width: 52px;
+  text-align: right;
+}
+
+/* Submit */
+.register-submit-btn {
+  width: 100%;
+  background: var(--green);
+  color: var(--white);
+  border: none;
+  padding: 15px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.2s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+}
+
+.register-submit-btn:hover:not(:disabled) {
+  background: #3a5029;
+  transform: translateY(-1px);
+}
+
+.register-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.register-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: var(--white);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+/* Login link */
+.register-login {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid var(--gray-light);
+}
+
+.register-login p {
+  font-size: 14px;
+  color: var(--gray);
+  margin-bottom: 10px;
+}
+
+.login-link-btn {
+  background: transparent;
+  border: 2px solid var(--green);
+  color: var(--green);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 12px 32px;
+  cursor: pointer;
+  border-radius: 2px;
+  width: 100%;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.login-link-btn:hover {
+  background: var(--green);
+  color: var(--white);
+  transform: translateY(-1px);
+}
+
+/* ══════════════════════════════════════ */
+/* PANTALLA DE ÉXITO                      */
+/* ══════════════════════════════════════ */
+.register-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  padding: 20px 0;
+  animation: fadeUp 0.5s ease both;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--white);
+  font-size: 36px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  margin-bottom: 8px;
+}
+
+.success-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  letter-spacing: 3px;
+  color: var(--black);
+}
+
+.success-sub {
+  font-size: 15px;
+  color: var(--gray);
+  line-height: 1.7;
+  max-width: 320px;
+}
+
+.success-sub strong { color: var(--green); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+  .register-page { grid-template-columns: 1fr; }
+
+  .register-left {
+    min-height: 220px;
+    align-items: flex-end;
+  }
+
+  .register-left-content {
+    padding: 32px;
+  }
+
+  .register-left-title   { font-size: 42px; }
+  .register-left-sub     { display: none; }
+  .register-steps-preview { display: none; }
+
+  .register-right { padding: 40px 24px; }
+}
+
+@media (max-width: 480px) {
+  .register-left-title  { font-size: 34px; }
+  .register-card-title  { font-size: 34px; }
+}

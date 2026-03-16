@@ -1,9 +1,12 @@
 import { useState } from "react"
 import "./Navbar.css"
+import { useCart } from "../../Context/CartContext"
+
 
 
 function Navbar({ currentPage, setPage }) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { count, openCart } = useCart()
 
   const navigate = (page) => {
     setPage(page)
@@ -11,12 +14,12 @@ function Navbar({ currentPage, setPage }) {
   }
 
   const navItems = [
-    { page: "home",     label: "Inicio" },
-    { page: "menu",     label: "Menú" },
+    { page: "home", label: "Inicio" },
+    { page: "menu", label: "Menú" },
     { page: "reservas", label: "Reservas" },
-    { page: "blog",     label: "Blog" },
-    { page: "galeria",  label: "Galería" },
-    { page: "contact",  label: "Contacto" },
+    { page: "blog", label: "Blog" },
+    { page: "galeria", label: "Galería" },
+    { page: "contact", label: "Contacto" },
   ]
 
   return (
@@ -47,10 +50,36 @@ function Navbar({ currentPage, setPage }) {
           ))}
         </ul>
 
-        {/* CTA desktop */}
-        <button className="navbar-cta" onClick={() => navigate("members")}>
-          ☕ Coffee Members
-        </button>
+        {/* ACTIONS desktop */}
+        <div className="navbar-actions">
+          <button className="navbar-cta" onClick={() => navigate("members")}>
+            ☕ Coffee Members
+          </button>
+
+          {/* CARRITO */}
+          <button
+            className="navbar-cart-btn"
+            onClick={openCart}
+            aria-label="Carrito"
+            title="Ver carrito"
+          >
+            🛒
+            {count > 0 && (
+              <span className="cart-bubble">{count}</span>
+            )}
+          </button>
+
+          {/* USUARIO */}
+          <button
+            className={`navbar-user-btn ${currentPage === "login" ? "active" : ""}`}
+            onClick={() => navigate("login")}
+            aria-label="Iniciar sesión"
+            title="Iniciar sesión"
+          >
+            👤
+          </button>
+        </div>
+
 
         {/* HAMBURGER mobile */}
         <button
@@ -66,8 +95,6 @@ function Navbar({ currentPage, setPage }) {
 
       {/* MOBILE MENU overlay */}
       <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>
-
-        {/* Logo en mobile menu */}
         <div className="mobile-logo">
           <img
             src="https://i.pinimg.com/1200x/f8/ef/d9/f8efd9caac201bb39588238dab435650.jpg"
@@ -85,8 +112,12 @@ function Navbar({ currentPage, setPage }) {
             {label}
           </button>
         ))}
+
         <button className="mobile-cta" onClick={() => navigate("members")}>
           ☕ Coffee Members →
+        </button>
+        <button className="mobile-login-btn" onClick={() => navigate("login")}>
+          👤 Iniciar sesión
         </button>
       </div>
     </>

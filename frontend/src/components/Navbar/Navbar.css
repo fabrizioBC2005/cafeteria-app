@@ -231,3 +231,124 @@ body {
   .hamburger { display: flex; }
   .mobile-menu { display: flex; }
 }
+
+/* ── NAVBAR ACTIONS ── */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── USER ICON BTN ── */
+.navbar-user-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 50%;
+  color: #888;
+  cursor: pointer;
+  transition: border-color 0.3s, color 0.3s, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  flex-shrink: 0;
+}
+
+.navbar-user-btn:hover {
+  border-color: #8BC34A;
+  color: #8BC34A;
+  transform: scale(1.1);
+}
+
+.navbar-user-btn.active {
+  border-color: #8BC34A;
+  color: #8BC34A;
+  background: rgba(139, 195, 74, 0.08);
+}
+
+/* ── MOBILE LOGIN ── */
+.mobile-login-btn {
+  margin-top: 8px;
+  background: transparent;
+  border: 1px solid #333;
+  color: #888;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 12px 32px;
+  cursor: pointer;
+  transition: border-color 0.3s, color 0.3s;
+}
+
+.mobile-login-btn:hover {
+  border-color: #8BC34A;
+  color: #8BC34A;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .navbar-actions { display: none; }
+}
+
+.navbar-user-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 50%;
+  color: #888;
+  cursor: pointer;
+  font-size: 18px;           /* ← tamaño del emoji */
+  line-height: 1;
+  transition: border-color 0.3s, color 0.3s, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  flex-shrink: 0;
+}
+
+.navbar-cart-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 50%;
+  font-size: 17px;
+  cursor: pointer;
+  transition: border-color 0.3s, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  flex-shrink: 0;
+}
+
+.navbar-cart-btn:hover {
+  border-color: #8BC34A;
+  transform: scale(1.1);
+}
+
+.cart-bubble {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #8BC34A;
+  color: #0d0d0d;
+  font-size: 10px;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Sans', sans-serif;
+  animation: popBubble 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes popBubble {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}

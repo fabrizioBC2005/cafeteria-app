@@ -1,0 +1,809 @@
+/* ── VARIABLES ── */
+:root {
+  --green:       #4e6b38;
+  --green-light: #8BC34A;
+  --green-pale:  #f0f5ea;
+  --green-soft:  #e0eccd;
+  --white:       #ffffff;
+  --black:       #111111;
+  --gray:        #555555;
+  --gray-light:  #e8e8e8;
+}
+
+/* ── ANIMACIONES ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatCard {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50%       { transform: translateY(-12px) rotate(-4deg); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ── PAGE ── */
+.members-page {
+  background: var(--white);
+  color: var(--black);
+  min-height: 100vh;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ══════════════════════════════════════ */
+/* HERO                                   */
+/* ══════════════════════════════════════ */
+.members-hero {
+  position: relative;
+  background: var(--green);
+  min-height: 88vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 80px 60px;
+}
+
+.members-hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 70% 50%, rgba(139,195,74,0.15) 0%, transparent 60%),
+    radial-gradient(circle at 10% 80%, rgba(0,0,0,0.2) 0%, transparent 50%),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(255,255,255,0.02) 40px,
+      rgba(255,255,255,0.02) 41px
+    );
+  pointer-events: none;
+}
+
+.members-hero-content {
+  max-width: 580px;
+  position: relative;
+  z-index: 2;
+  animation: fadeUp 0.7s ease both;
+}
+
+.members-eyebrow {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.members-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 96px;
+  line-height: 0.88;
+  letter-spacing: 5px;
+  color: var(--white);
+  margin-bottom: 24px;
+}
+
+.members-title span { color: var(--green-light); }
+
+.members-sub {
+  font-size: 16px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.8;
+  max-width: 440px;
+  margin-bottom: 40px;
+}
+
+.members-hero-btns {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.members-cta-btn {
+  background: var(--green-light);
+  color: var(--black);
+  border: none;
+  padding: 15px 32px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: opacity 0.2s, transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.members-cta-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-3px);
+}
+
+.members-secondary-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.4);
+  color: var(--white);
+  padding: 15px 32px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.members-secondary-btn:hover {
+  border-color: var(--white);
+  background: rgba(255,255,255,0.08);
+  transform: translateY(-2px);
+}
+
+.members-secondary-btn.white {
+  border-color: rgba(255,255,255,0.4);
+  color: var(--white);
+}
+
+/* Tarjeta flotante hero */
+.hero-card-float {
+  position: absolute;
+  right: 10%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  animation: floatCard 4s ease-in-out infinite;
+}
+
+.hero-card {
+  width: 320px;
+  height: 200px;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 32px 64px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-card::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: -20%;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  pointer-events: none;
+}
+
+.hero-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.hero-card-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.9);
+}
+
+.hero-card-plan {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.hero-card-chip {
+  width: 40px;
+  height: 30px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chip-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.chip-lines span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: rgba(255,255,255,0.4);
+  border-radius: 1px;
+}
+
+.hero-card-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hero-card-name {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+}
+
+.hero-card-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.85);
+}
+
+/* ══════════════════════════════════════ */
+/* BENEFICIOS                             */
+/* ══════════════════════════════════════ */
+.members-benefits-section {
+  background: var(--white);
+  padding: 90px 0;
+}
+
+.members-benefits-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 60px;
+}
+
+.section-eyebrow {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--green);
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 56px;
+  letter-spacing: 3px;
+  color: var(--black);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.section-title span { color: var(--green); }
+
+.section-sub {
+  font-size: 15px;
+  color: var(--gray);
+  margin-bottom: 50px;
+  max-width: 480px;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 50px;
+}
+
+.benefit-card {
+  background: var(--green-pale);
+  border: 1px solid var(--green-soft);
+  border-radius: 4px;
+  padding: 32px 24px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(78,107,56,0.1);
+}
+
+.benefit-icon {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.benefit-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 2px;
+  color: var(--black);
+  margin-bottom: 10px;
+}
+
+.benefit-desc {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.75;
+}
+
+/* ══════════════════════════════════════ */
+/* PLANES                                 */
+/* ══════════════════════════════════════ */
+.members-plans-section {
+  background: var(--green-pale);
+  padding: 90px 0;
+  border-top: 1px solid var(--green-soft);
+}
+
+.members-plans-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 60px;
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 50px;
+}
+
+.plan-card {
+  background: var(--white);
+  border: 2px solid var(--gray-light);
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.plan-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--green-soft);
+  box-shadow: 0 16px 40px rgba(78,107,56,0.1);
+}
+
+.plan-card.selected {
+  border-color: var(--green);
+  box-shadow: 0 0 0 4px rgba(78,107,56,0.1), 0 16px 40px rgba(78,107,56,0.12);
+}
+
+.plan-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: var(--green);
+  color: var(--white);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  z-index: 2;
+}
+
+/* Mini card dentro del plan */
+.plan-mini-card {
+  width: 100%;
+  height: 130px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.plan-mini-card::after {
+  content: "";
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+}
+
+.mini-card-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.8);
+}
+
+.mini-card-plan {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 3px;
+  color: var(--white);
+}
+
+.mini-card-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.mini-card-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.4);
+}
+
+.mini-card-dots .last {
+  width: 22px;
+  border-radius: 3px;
+}
+
+/* Plan info */
+.plan-info {
+  padding: 24px;
+}
+
+.plan-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 2px;
+  color: var(--black);
+  margin-bottom: 8px;
+}
+
+.plan-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+
+.price-amount {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  letter-spacing: 2px;
+  color: var(--black);
+  line-height: 1;
+}
+
+.price-period {
+  font-size: 14px;
+  color: var(--gray);
+}
+
+.plan-benefits {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.plan-benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.plan-benefit-item.included { color: var(--black); }
+.plan-benefit-item.excluded { color: #ccc; }
+
+.check {
+  color: var(--green);
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.cross {
+  color: #ccc;
+  font-size: 13px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.plan-select-btn {
+  width: 100%;
+  background: transparent;
+  border: 2px solid var(--green);
+  color: var(--green);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.plan-select-btn:hover {
+  background: var(--green);
+  color: var(--white);
+}
+
+/* ══════════════════════════════════════ */
+/* TARJETA DIGITAL                        */
+/* ══════════════════════════════════════ */
+.members-digital-section {
+  background: var(--white);
+  padding: 90px 0;
+}
+
+.members-digital-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 60px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.digital-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 56px;
+  letter-spacing: 3px;
+  color: var(--black);
+  line-height: 1;
+  margin-bottom: 16px;
+  margin-top: 14px;
+}
+
+.digital-title span { color: var(--green); }
+
+.digital-desc {
+  font-size: 15px;
+  color: var(--gray);
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+
+.digital-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.digital-features li {
+  font-size: 14px;
+  color: var(--black);
+  padding: 12px 16px;
+  background: var(--green-pale);
+  border-left: 3px solid var(--green);
+  border-radius: 0 2px 2px 0;
+}
+
+/* Flip card */
+.digital-card-demo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-flip-wrap {
+  width: 340px;
+  height: 210px;
+  perspective: 1000px;
+  cursor: pointer;
+  position: relative;
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+  backface-visibility: hidden;
+  transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+  overflow: hidden;
+}
+
+.card-face::before {
+  content: "";
+  position: absolute;
+  top: -30%;
+  right: -15%;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+
+.card-front {
+  transform: rotateY(0deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.card-flip-wrap.flipped .card-front { transform: rotateY(-180deg); }
+.card-flip-wrap.flipped .card-back  { transform: rotateY(0deg); }
+
+/* Frente */
+.card-face-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.card-face-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.9);
+}
+
+.card-face-plan {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.card-face-chip {
+  width: 42px;
+  height: 32px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chip-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.chip-inner span {
+  display: block;
+  width: 26px;
+  height: 2px;
+  background: rgba(255,255,255,0.4);
+  border-radius: 1px;
+}
+
+.card-face-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.card-face-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.card-face-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.85);
+}
+
+.card-hint {
+  position: absolute;
+  bottom: 8px;
+  right: 14px;
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 1px;
+}
+
+/* Reverso — QR */
+.card-back-title {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+}
+
+.card-qr-wrap {
+  background: var(--white);
+  padding: 10px;
+  border-radius: 8px;
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-svg {
+  width: 70px;
+  height: 70px;
+  color: var(--black);
+}
+
+.card-member-code {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.7);
+}
+
+/* ══════════════════════════════════════ */
+/* CTA FINAL                              */
+/* ══════════════════════════════════════ */
+.members-cta-section {
+  background: var(--black);
+  padding: 80px 60px;
+  text-align: center;
+}
+
+.members-cta-inner {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cta-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 60px;
+  letter-spacing: 4px;
+  color: var(--white);
+  margin-bottom: 14px;
+  line-height: 1;
+}
+
+.cta-sub {
+  font-size: 16px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 36px;
+  line-height: 1.7;
+}
+
+.cta-btns {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  .benefits-grid   { grid-template-columns: repeat(2, 1fr); }
+  .plans-grid      { grid-template-columns: 1fr; max-width: 420px; margin-left: auto; margin-right: auto; }
+  .hero-card-float { display: none; }
+  .members-digital-inner { grid-template-columns: 1fr; gap: 40px; }
+}
+
+@media (max-width: 768px) {
+  .members-hero    { padding: 70px 24px; min-height: auto; }
+  .members-title   { font-size: 64px; }
+  .members-benefits-inner,
+  .members-plans-inner,
+  .members-digital-inner { padding: 0 24px; }
+  .benefits-grid   { grid-template-columns: 1fr; }
+  .section-title   { font-size: 40px; }
+  .digital-title   { font-size: 40px; }
+  .cta-title       { font-size: 44px; }
+  .members-cta-section { padding: 60px 24px; }
+}

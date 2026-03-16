@@ -15,7 +15,7 @@ function Home({ setPage }) {
             <button className="btn-primary" onClick={() => setPage("menu")}>
               Ver Catálogo
             </button>
-            <button className="btn-secondary" onClick={() => setPage("contact")}>
+            <button className="btn-secondary" onClick={() => setPage("blog")}>
               Conocer más
             </button>
           </div>
