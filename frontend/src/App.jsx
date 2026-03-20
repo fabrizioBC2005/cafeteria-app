@@ -16,6 +16,7 @@ import Members from "./pages/Members/Members"
 import Checkout from "./pages/Checkout/Checkout"
 import Admin from "./pages/Admin/Admin"
 
+
 function AppInner() {
   const [currentPage, setCurrentPage] = useState("home")
   const { isAdmin } = useAuth()

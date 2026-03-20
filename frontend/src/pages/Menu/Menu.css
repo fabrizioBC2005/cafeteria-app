@@ -137,3 +137,56 @@
     padding: 8px 14px;
   }
 }
+/* ── AGREGAR AL FINAL DE Menu.css ── */
+
+/* Buscador */
+.menu-search-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+  padding: 0 60px;
+}
+
+.menu-search {
+  background: #111;
+  border: 1px solid #222;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 40px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+  max-width: 400px;
+  transition: border-color 0.2s;
+}
+
+.menu-search:focus { border-color: #8BC34A; }
+.menu-search::placeholder { color: #444; }
+
+/* Skeleton loader */
+.menu-loading {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 0 60px;
+}
+
+.product-card-skeleton {
+  background: #111;
+  border: 1px solid #1e1e1e;
+  border-radius: 4px;
+  height: 380px;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0%   { opacity: 0.5; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+@media (max-width: 768px) {
+  .menu-search-wrap { padding: 0 24px; }
+  .menu-loading      { padding: 0 24px; }
+}

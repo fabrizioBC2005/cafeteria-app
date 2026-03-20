@@ -61,7 +61,6 @@ function Navbar({ currentPage, setPage }) {
             ☕ Coffee Members
           </button>
 
-          {/* Admin solo visible para admins */}
           {isAdmin && (
             <button
               className="navbar-cta"
@@ -73,23 +72,19 @@ function Navbar({ currentPage, setPage }) {
           )}
 
           {/* CARRITO */}
-          <button
-            className="navbar-cart-btn"
-            onClick={openCart}
-            aria-label="Carrito"
-          >
+          <button className="navbar-cart-btn" onClick={openCart} aria-label="Carrito">
             🛒
             {count > 0 && <span className="cart-bubble">{count}</span>}
           </button>
 
-          {/* USUARIO — muestra avatar si está logueado, sino botón login */}
+          {/* USUARIO */}
           {user ? (
             <div className="navbar-user-menu">
-              <button className="navbar-avatar-btn" title={user.name}>
-                {user.name.charAt(0).toUpperCase()}
+              <button className="navbar-avatar-btn" title={user.nombre}>
+                {user.nombre.charAt(0).toUpperCase()}
               </button>
               <div className="navbar-dropdown">
-                <p className="dropdown-name">{user.name}</p>
+                <p className="dropdown-name">{user.nombre}</p>
                 <p className="dropdown-email">{user.email}</p>
                 <hr className="dropdown-divider" />
                 {isAdmin && (
@@ -138,9 +133,9 @@ function Navbar({ currentPage, setPage }) {
 
         {user && (
           <div className="mobile-user-info">
-            <span className="mobile-avatar">{user.name.charAt(0).toUpperCase()}</span>
+            <span className="mobile-avatar">{user.nombre.charAt(0).toUpperCase()}</span>
             <div>
-              <p className="mobile-user-name">{user.name}</p>
+              <p className="mobile-user-name">{user.nombre}</p>
               <p className="mobile-user-email">{user.email}</p>
             </div>
           </div>

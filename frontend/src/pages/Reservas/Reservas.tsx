@@ -1,5 +1,6 @@
 import { useState } from "react"
 import "./Reservas.css"
+import { reservasService } from "../../services/api.ts"
 
 /* ── TIPOS ── */
 interface Table {
@@ -51,8 +52,6 @@ const TABLES: Table[] = [
   { id: 10, x: 78, y: 75, seats: 2, zone: "Barra"   },
 ]
 
-const OCCUPIED: number[] = [3, 7]
-
 const OCASIONES: Ocasion[] = [
   { value: "casual",    label: "☕ Visita casual"       },
   { value: "romantico", label: "🌹 Momento romántico"   },
@@ -79,6 +78,9 @@ const POLITICAS: Politica[] = [
 function Reservas() {
   const [selected, setSelected] = useState<Table | null>(null)
   const [step, setStep]         = useState<number>(1)
+  const [loading, setLoading]   = useState<boolean>(false)
+  const [error, setError]       = useState<string>("")
+  const [occupied, setOccupied] = useState<number[]>([])
   const [form, setForm]         = useState<FormData>({
     nombre: "", email: "", telefono: "",
     fecha: "", hora: "", personas: "2", ocasion: "casual", notas: "",
@@ -86,25 +88,62 @@ function Reservas() {
 
   const today = new Date().toISOString().split("T")[0]
 
+  // Cargar mesas ocupadas cuando cambia la fecha
+  const fetchOccupied = async (fecha: string) => {
+    if (!fecha) return
+    try {
+      const { data } = await reservasService.getMesasOcupadas(fecha)
+      setOccupied(data)
+    } catch {
+      setOccupied([])
+    }
+  }
+
   const handleTable = (table: Table): void => {
-    if (OCCUPIED.includes(table.id)) return
+    if (occupied.includes(table.id)) return
     setSelected(table)
   }
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ): void => {
-    setForm({ ...form, [e.target.name]: e.target.value })
+    const { name, value } = e.target
+    setForm({ ...form, [name]: value })
+    if (name === "fecha") fetchOccupied(value)
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
-    setStep(3)
+    setLoading(true)
+    setError("")
+    try {
+      await reservasService.create({
+        nombre:   form.nombre,
+        email:    form.email,
+        telefono: form.telefono,
+        fecha:    form.fecha,
+        hora:     form.hora,
+        personas: parseInt(form.personas),
+        mesa_id:  selected?.id,
+        zona:     selected?.zone,
+        ocasion:  form.ocasion,
+        notas:    form.notas,
+      })
+      setStep(3)
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { error?: string } } })
+        ?.response?.data?.error || "Error al crear la reserva"
+      setError(msg)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const reset = (): void => {
     setSelected(null)
     setStep(1)
+    setError("")
+    setOccupied([])
     setForm({ nombre:"", email:"", telefono:"", fecha:"", hora:"", personas:"2", ocasion:"casual", notas:"" })
   }
 
@@ -145,7 +184,7 @@ function Reservas() {
               <div className="floor-entrance">ENTRADA</div>
 
               {TABLES.map((t) => {
-                const isOccupied = OCCUPIED.includes(t.id)
+                const isOccupied = occupied.includes(t.id)
                 const isSelected = selected?.id === t.id
                 const size = t.seats <= 2 ? 70 : t.seats <= 4 ? 82 : 98
                 return (
@@ -274,9 +313,11 @@ function Reservas() {
                 <textarea name="notas" value={form.notas} onChange={handleChange} placeholder="Alergias, decoraciones especiales, peticiones..." rows={3} />
               </div>
 
-              <button type="submit" className="btn-primary res-submit-btn">
-                Confirmar Reserva ✓
+              <button type="submit" className="btn-primary res-submit-btn" disabled={loading}>
+                {loading ? "Reservando..." : "Confirmar Reserva ✓"}
               </button>
+
+              {error && <p className="login-error">⚠️ {error}</p>}
             </form>
           </div>
         </div>

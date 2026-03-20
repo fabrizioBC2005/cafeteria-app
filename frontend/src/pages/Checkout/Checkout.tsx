@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useCart } from "../../Context/CartContext"
+import { pedidosService } from "../../services/api.ts"
 import "./Checkout.css"
 
 interface CheckoutProps {
@@ -20,7 +21,8 @@ function Checkout({ setPage }: CheckoutProps) {
   const [payMethod, setPayMethod]   = useState<PayMethod>("card")
   const [loading, setLoading]       = useState(false)
   const [done, setDone]             = useState(false)
-  const [orderNum] = useState("LOC-" + Math.floor(10000 + Math.random() * 90000))
+  const [orderNum, setOrderNum]     = useState("")
+  const [error, setError]           = useState("")
 
   const [card, setCard] = useState<CardForm>({
     name: "", number: "", expiry: "", cvv: ""
@@ -30,8 +32,8 @@ function Checkout({ setPage }: CheckoutProps) {
     nombre: "", telefono: "", direccion: "", referencia: ""
   })
 
-  const delivery = 5.00
-  const orderTotal = total + delivery
+  const delivery    = 5.00
+  const orderTotal  = total + delivery
 
   const formatCard = (val: string) =>
     val.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim()
@@ -39,14 +41,29 @@ function Checkout({ setPage }: CheckoutProps) {
   const formatExpiry = (val: string) =>
     val.replace(/\D/g, "").slice(0, 4).replace(/^(\d{2})(\d)/, "$1/$2")
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-      setDone(true)
+    setError("")
+    try {
+      const { data } = await pedidosService.create({
+        items: items.map(i => ({ id: i.id, cantidad: i.quantity })),
+        metodo_pago:      payMethod,
+        nombre_cliente:   address.nombre,
+        telefono_cliente: address.telefono,
+        direccion:        address.direccion,
+        referencia:       address.referencia,
+      })
+      setOrderNum(data.pedido.numero)
       clearCart()
-    }, 2000)
+      setDone(true)
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { error?: string } } })
+        ?.response?.data?.error || "Error al procesar el pedido"
+      setError(msg)
+    } finally {
+      setLoading(false)
+    }
   }
 
   /* ── CONFIRMACIÓN ── */
@@ -335,6 +352,8 @@ function Checkout({ setPage }: CheckoutProps) {
               : `Confirmar pedido — S/ ${orderTotal.toFixed(2)}`
             }
           </button>
+
+          {error && <p className="login-error">⚠️ {error}</p>}
         </form>
 
         {/* ── RESUMEN ── */}

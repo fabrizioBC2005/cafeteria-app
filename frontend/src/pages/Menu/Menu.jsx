@@ -1,17 +1,38 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import ProductCard from "../../components/ProductCard/ProductCard"
-import { products, categories } from "../../data/products"
+import { productosService } from "../../services/api.ts"
 import "./Menu.css"
 
 function Menu() {
   const [activeCategory, setActiveCategory] = useState("all")
+  const [products,   setProducts]   = useState([])
+  const [categories, setCategories] = useState([])
+  const [loading,    setLoading]    = useState(true)
+  const [search,     setSearch]     = useState("")
 
-  const filtered = activeCategory === "all"
-    ? products
-    : products.filter(p => p.category === activeCategory)
+  // Cargar categorías
+  useEffect(() => {
+    productosService.getCategorias().then(({ data }) => {
+      setCategories(data)
+    }).catch(console.error)
+  }, [])
+
+  // Cargar productos cuando cambia la categoría
+  useEffect(() => {
+    setLoading(true)
+    const params = {}
+    if (activeCategory !== "all") params.categoria = activeCategory
+    if (search) params.search = search
+
+    productosService.getAll(params).then(({ data }) => {
+      setProducts(data.productos)
+    }).catch(console.error)
+    .finally(() => setLoading(false))
+  }, [activeCategory, search])
 
   return (
     <main className="menu-page">
+
       {/* HEADER */}
       <div className="menu-header">
         <p className="menu-eyebrow">— Selección Artesanal —</p>
@@ -22,29 +43,51 @@ function Menu() {
         </p>
       </div>
 
+      {/* BUSCADOR */}
+      <div className="menu-search-wrap">
+        <input
+          className="menu-search"
+          placeholder="🔍 Buscar producto..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+      </div>
+
       {/* FILTROS */}
       <div className="menu-filters">
         {categories.map(cat => (
           <button
             key={cat.id}
-            className={`filter-btn ${activeCategory === cat.id ? "active" : ""}`}
-            onClick={() => setActiveCategory(cat.id)}
+            className={`filter-btn ${activeCategory === cat.slug ? "active" : ""}`}
+            onClick={() => setActiveCategory(cat.slug)}
           >
-            {cat.label}
+            {cat.nombre}
           </button>
         ))}
       </div>
 
-      {/* GRID */}
-      <div className="menu-grid">
-        {filtered.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      {/* LOADING */}
+      {loading && (
+        <div className="menu-loading">
+          {[1,2,3,4,5,6].map(n => (
+            <div key={n} className="product-card-skeleton" />
+          ))}
+        </div>
+      )}
 
-      {filtered.length === 0 && (
+      {/* GRID */}
+      {!loading && (
+        <div className="menu-grid">
+          {products.map(product => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
+
+      {!loading && products.length === 0 && (
         <p className="menu-empty">No hay productos en esta categoría.</p>
       )}
+
     </main>
   )
 }
