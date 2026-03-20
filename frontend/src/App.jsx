@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { CartProvider } from "./Context/CartContext"
+import { AuthProvider, useAuth } from "./Context/AuthContext"
 import Navbar from "./components/Navbar/Navbar"
 import CartSidebar from "./components/CartSidebar/CartSidebar"
 import Footer from "./components/Footer/Footer"
@@ -13,9 +14,11 @@ import Login from "./pages/Login/Login"
 import Register from "./pages/Register/Register"
 import Members from "./pages/Members/Members"
 import Checkout from "./pages/Checkout/Checkout"
+import Admin from "./pages/Admin/Admin"
 
-function App() {
+function AppInner() {
   const [currentPage, setCurrentPage] = useState("home")
+  const { isAdmin } = useAuth()
 
   const renderPage = () => {
     switch (currentPage) {
@@ -29,21 +32,34 @@ function App() {
       case "register": return <Register setPage={setCurrentPage} />
       case "members":  return <Members setPage={setCurrentPage} />
       case "checkout": return <Checkout setPage={setCurrentPage} />
-      default:         return <Home setPage={setCurrentPage} />
+      case "admin":
+        // Solo accesible si es admin
+        return isAdmin
+          ? <Admin setPage={setCurrentPage} />
+          : <Login setPage={setCurrentPage} />
+      default: return <Home setPage={setCurrentPage} />
     }
   }
 
-  const noFooter = ["reservas", "checkout"]
+  const noFooter = ["reservas", "checkout", "admin"]
 
   return (
-    <CartProvider>
-      <div style={{ background: "#0d0d0d", minHeight: "100vh" }}>
-        <Navbar currentPage={currentPage} setPage={setCurrentPage} />
-        <CartSidebar setPage={setCurrentPage} />
-        {renderPage()}
-        {!noFooter.includes(currentPage) && <Footer setPage={setCurrentPage} />}
-      </div>
-    </CartProvider>
+    <div style={{ background: "#0d0d0d", minHeight: "100vh" }}>
+      <Navbar currentPage={currentPage} setPage={setCurrentPage} />
+      <CartSidebar setPage={setCurrentPage} />
+      {renderPage()}
+      {!noFooter.includes(currentPage) && <Footer setPage={setCurrentPage} />}
+    </div>
+  )
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <CartProvider>
+        <AppInner />
+      </CartProvider>
+    </AuthProvider>
   )
 }
 
