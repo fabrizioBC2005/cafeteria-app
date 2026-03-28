@@ -1,6 +1,14 @@
 const { Pool } = require("pg")
 require("dotenv").config()
 
+process.on("SIGTERM", () => {
+  console.log("⚠️ SIGTERM recibido, cerrando pool...")
+  pool.end(() => {
+    console.log("Pool cerrado")
+    process.exit(0)
+  })
+})
+
 const pool = new Pool(
   process.env.DATABASE_URL
     ? {

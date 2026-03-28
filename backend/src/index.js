@@ -1,4 +1,10 @@
 require("dotenv").config()
+
+
+console.log("🔍 DATABASE_URL:", process.env.DATABASE_URL ? "✅ existe" : "❌ NO existe")
+console.log("🔍 NODE_ENV:", process.env.NODE_ENV)
+console.log("🔍 PORT:", process.env.PORT)
+
 const express = require("express")
 const cors    = require("cors")
 const path    = require("path")
