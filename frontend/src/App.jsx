@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"  // ← agrega useEffect
 import { CartProvider } from "./Context/CartContext"
 import { AuthProvider, useAuth } from "./Context/AuthContext"
 import Navbar from "./components/Navbar/Navbar"
@@ -16,10 +16,31 @@ import Members from "./pages/Members/Members"
 import Checkout from "./pages/Checkout/Checkout"
 import Admin from "./pages/Admin/Admin"
 
-
 function AppInner() {
   const [currentPage, setCurrentPage] = useState("home")
   const { isAdmin } = useAuth()
+
+  // ← Scroll al inicio al cambiar de página
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [currentPage])
+
+  // ← Botón retroceso del navegador
+  useEffect(() => {
+    window.history.pushState({ page: currentPage }, "", `/${currentPage === "home" ? "" : currentPage}`)
+  }, [currentPage])
+
+  useEffect(() => {
+    const handlePopState = (e) => {
+      if (e.state?.page) {
+        setCurrentPage(e.state.page)
+      } else {
+        setCurrentPage("home")
+      }
+    }
+    window.addEventListener("popstate", handlePopState)
+    return () => window.removeEventListener("popstate", handlePopState)
+  }, [])
 
   const renderPage = () => {
     switch (currentPage) {
@@ -34,7 +55,6 @@ function AppInner() {
       case "members":  return <Members setPage={setCurrentPage} />
       case "checkout": return <Checkout setPage={setCurrentPage} />
       case "admin":
-        // Solo accesible si es admin
         return isAdmin
           ? <Admin setPage={setCurrentPage} />
           : <Login setPage={setCurrentPage} />
