@@ -1,5 +1,6 @@
 const { Pool } = require("pg")
-require("dotenv").config()
+
+// ← QUITA el require("dotenv").config() de aquí
 
 process.on("SIGTERM", () => {
   console.log("⚠️ SIGTERM recibido, cerrando pool...")
@@ -27,7 +28,6 @@ const pool = new Pool(
 pool.on("connect", () => console.log("✅ PostgreSQL conectado"))
 pool.on("error", (err) => {
   console.error("❌ Error en PostgreSQL:", err.message)
-  // ← QUITA el process.exit(1) temporalmente para ver el error completo
 })
 
 module.exports = pool
