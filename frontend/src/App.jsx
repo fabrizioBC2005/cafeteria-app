@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { CartProvider } from "./Context/CartContext"
 import { AuthProvider, useAuth } from "./Context/AuthContext"
 import Navbar from "./components/Navbar/Navbar"
@@ -16,10 +16,8 @@ import Members from "./pages/Members/Members"
 import Checkout from "./pages/Checkout/Checkout"
 import Admin from "./pages/Admin/Admin"
 
-// Páginas válidas
 const VALID_PAGES = ["home", "menu", "reservas", "blog", "galeria", "contact", "login", "register", "members", "checkout", "admin"]
 
-// Lee la página desde la URL al cargar
 const getInitialPage = () => {
   const path = window.location.pathname.replace("/", "").toLowerCase()
   return VALID_PAGES.includes(path) ? path : "home"
@@ -28,6 +26,7 @@ const getInitialPage = () => {
 function AppInner() {
   const [currentPage, setCurrentPage] = useState(getInitialPage)
   const { isAdmin } = useAuth()
+  const isFirstRender = useRef(true)
 
   // Scroll al inicio al cambiar de página
   useEffect(() => {
@@ -36,6 +35,15 @@ function AppInner() {
 
   // Actualiza la URL al cambiar de página
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      window.history.replaceState(
+        { page: currentPage },
+        "",
+        `/${currentPage === "home" ? "" : currentPage}`
+      )
+      return
+    }
     window.history.pushState(
       { page: currentPage },
       "",
