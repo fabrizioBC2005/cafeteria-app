@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"  // ← agrega useEffect
+import { useState, useEffect } from "react"
 import { CartProvider } from "./Context/CartContext"
 import { AuthProvider, useAuth } from "./Context/AuthContext"
 import Navbar from "./components/Navbar/Navbar"
@@ -16,26 +16,41 @@ import Members from "./pages/Members/Members"
 import Checkout from "./pages/Checkout/Checkout"
 import Admin from "./pages/Admin/Admin"
 
+// Páginas válidas
+const VALID_PAGES = ["home", "menu", "reservas", "blog", "galeria", "contact", "login", "register", "members", "checkout", "admin"]
+
+// Lee la página desde la URL al cargar
+const getInitialPage = () => {
+  const path = window.location.pathname.replace("/", "").toLowerCase()
+  return VALID_PAGES.includes(path) ? path : "home"
+}
+
 function AppInner() {
-  const [currentPage, setCurrentPage] = useState("home")
+  const [currentPage, setCurrentPage] = useState(getInitialPage)
   const { isAdmin } = useAuth()
 
-  // ← Scroll al inicio al cambiar de página
+  // Scroll al inicio al cambiar de página
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [currentPage])
 
-  // ← Botón retroceso del navegador
+  // Actualiza la URL al cambiar de página
   useEffect(() => {
-    window.history.pushState({ page: currentPage }, "", `/${currentPage === "home" ? "" : currentPage}`)
+    window.history.pushState(
+      { page: currentPage },
+      "",
+      `/${currentPage === "home" ? "" : currentPage}`
+    )
   }, [currentPage])
 
+  // Maneja el botón retroceso/avance del navegador
   useEffect(() => {
     const handlePopState = (e) => {
       if (e.state?.page) {
         setCurrentPage(e.state.page)
       } else {
-        setCurrentPage("home")
+        const path = window.location.pathname.replace("/", "").toLowerCase()
+        setCurrentPage(VALID_PAGES.includes(path) ? path : "home")
       }
     }
     window.addEventListener("popstate", handlePopState)
