@@ -1,4 +1,6 @@
-require("dotenv").config()
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config()
+}
 
 
 console.log("🔍 DATABASE_URL:", process.env.DATABASE_URL ? "✅ existe" : "❌ NO existe")
