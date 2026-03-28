@@ -5,7 +5,7 @@ const pool = new Pool(
   process.env.DATABASE_URL
     ? {
         connectionString: process.env.DATABASE_URL,
-        ssl: { rejectUnauthorized: false }  // ← necesario en Railway
+        ssl: { rejectUnauthorized: false }
       }
     : {
         host:     process.env.DB_HOST     || "localhost",
@@ -19,7 +19,7 @@ const pool = new Pool(
 pool.on("connect", () => console.log("✅ PostgreSQL conectado"))
 pool.on("error", (err) => {
   console.error("❌ Error en PostgreSQL:", err.message)
-  process.exit(1)
+  // ← QUITA el process.exit(1) temporalmente para ver el error completo
 })
 
 module.exports = pool

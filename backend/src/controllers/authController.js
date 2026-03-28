@@ -75,7 +75,7 @@ const login = async (req, res) => {
 
     res.json({ user: safeUser, token })
   } catch (err) {
-    console.error("login error:", err.message)
+    console.error("login error:", err)
     res.status(500).json({ error: "Error interno del servidor" })
   }
 }
