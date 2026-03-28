@@ -1,12 +1,11 @@
 const nodemailer = require("nodemailer")
 require("dotenv").config()
-
+ 
 /* ── TRANSPORTER ── */
 const transporter = nodemailer.createTransport({
   host:   process.env.EMAIL_HOST   || "smtp.gmail.com",
   port:   parseInt(process.env.EMAIL_PORT) || 587,
   secure: false,
-  family: 4,  
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -15,16 +14,18 @@ const transporter = nodemailer.createTransport({
     rejectUnauthorized: false
   }
 })
-
-// ── TEST DE CONEXIÓN ──
-transporter.verify((error) => {
-  if (error) {
-    console.log("❌ Email config error:", error.message)
-  } else {
-    console.log("✅ Email listo para enviar")
-  }
-})
-
+ 
+// ── TEST DE CONEXIÓN (solo en desarrollo) ──
+if (process.env.NODE_ENV !== "production") {
+  transporter.verify((error) => {
+    if (error) {
+      console.log("❌ Email config error:", error.message)
+    } else {
+      console.log("✅ Email listo para enviar")
+    }
+  })
+}
+ 
 /* ── TEMPLATE BASE ── */
 const baseTemplate = (content) => `
 <!DOCTYPE html>
@@ -67,11 +68,11 @@ const baseTemplate = (content) => `
 </body>
 </html>
 `
-
+ 
 /* ══════════════════════════════════════
    EMAILS
 ══════════════════════════════════════ */
-
+ 
 // ── BIENVENIDA / REGISTRO ──
 const sendWelcome = async ({ nombre, email }) => {
   await transporter.sendMail({
@@ -97,7 +98,7 @@ const sendWelcome = async ({ nombre, email }) => {
     `)
   })
 }
-
+ 
 // ── CONFIRMACIÓN DE PEDIDO ──
 const sendOrderConfirmation = async ({ nombre, email, pedido, items }) => {
   const itemsHtml = items.map(i => `
@@ -106,13 +107,13 @@ const sendOrderConfirmation = async ({ nombre, email, pedido, items }) => {
       <strong>S/ ${parseFloat(i.subtotal).toFixed(2)}</strong>
     </div>
   `).join("")
-
+ 
   const metodoPago = {
     tarjeta:  "💳 Tarjeta de crédito/débito",
     yape:     "📱 Yape / Plin",
     efectivo: "💵 Efectivo en tienda",
   }[pedido.metodo_pago] || pedido.metodo_pago
-
+ 
   await transporter.sendMail({
     from:    `"Locafe ☕" <${process.env.EMAIL_USER}>`,
     to:      email,
@@ -137,7 +138,7 @@ const sendOrderConfirmation = async ({ nombre, email, pedido, items }) => {
     `)
   })
 }
-
+ 
 // ── CONFIRMACIÓN DE RESERVA ──
 const sendReservaConfirmation = async ({ nombre, email, reserva }) => {
   const ocasionEmoji = {
@@ -148,7 +149,7 @@ const sendReservaConfirmation = async ({ nombre, email, reserva }) => {
     amigos:    "🥂",
     familia:   "👨‍👩‍👧",
   }[reserva.ocasion] || "📅"
-
+ 
   await transporter.sendMail({
     from:    `"Locafe ☕" <${process.env.EMAIL_USER}>`,
     to:      email,
@@ -173,13 +174,13 @@ const sendReservaConfirmation = async ({ nombre, email, reserva }) => {
     `)
   })
 }
-
+ 
 // ── ACTIVACIÓN DE MEMBRESÍA ──
 const sendMembresiaActivada = async ({ nombre, email, membresia }) => {
   const planEmoji = { classic:"🥉", gold:"🥇", black:"⚫" }[membresia.plan] || "☕"
   const descuento = { classic:"10%", gold:"15%", black:"20%" }[membresia.plan] || "10%"
   const cafes     = { classic:10,    gold:8,     black:5    }[membresia.plan] || 10
-
+ 
   await transporter.sendMail({
     from:    `"Locafe ☕" <${process.env.EMAIL_USER}>`,
     to:      email,
@@ -204,7 +205,7 @@ const sendMembresiaActivada = async ({ nombre, email, membresia }) => {
     `)
   })
 }
-
+ 
 module.exports = {
   sendWelcome,
   sendOrderConfirmation,
