@@ -2,37 +2,42 @@ import { useState } from "react"
 import "./Navbar.css"
 import { useCart } from "../../Context/CartContext"
 import { useAuth } from "../../Context/AuthContext"
+import { useNavigate, useLocation } from "react-router-dom"
 
-function Navbar({ currentPage, setPage }) {
+function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const { count, openCart } = useCart()
   const { user, logout, isAdmin } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
 
-  const navigate = (page) => {
-    setPage(page)
+const goTo = (path) => {
+    navigate(path)
     setMenuOpen(false)
   }
 
   const handleLogout = () => {
     logout()
-    navigate("home")
+    navigate("/")
   }
 
   const navItems = [
-    { page: "home",     label: "Inicio"   },
-    { page: "menu",     label: "Menú"     },
-    { page: "reservas", label: "Reservas" },
-    { page: "blog",     label: "Blog"     },
-    { page: "galeria",  label: "Galería"  },
-    { page: "contact",  label: "Contacto" },
+    { path: "/",        label: "Inicio"   },
+    { path: "/menu",    label: "Menú"     },
+    { path: "/reservas",label: "Reservas" },
+    { path: "/blog",    label: "Blog"     },
+    { path: "/galeria", label: "Galería"  },
+    { path: "/contact", label: "Contacto" },
   ]
+
+  const currentPath = location.pathname
 
   return (
     <>
       <nav className="navbar">
 
         {/* LOGO */}
-        <div className="navbar-logo" onClick={() => navigate("home")}>
+        <div className="navbar-logo" onClick={() => goTo("/")}>
           <img
             src="https://i.pinimg.com/1200x/f8/ef/d9/f8efd9caac201bb39588238dab435650.jpg"
             alt="Locafe"
@@ -43,11 +48,11 @@ function Navbar({ currentPage, setPage }) {
 
         {/* LINKS desktop */}
         <ul className="navbar-links">
-          {navItems.map(({ page, label }) => (
-            <li key={page}>
+          {navItems.map(({ path, label }) => (
+            <li key={path}>
               <button
-                className={`nav-btn ${currentPage === page ? "active" : ""}`}
-                onClick={() => navigate(page)}
+                className={`nav-btn ${currentPath === path ? "active" : ""}`}
+                onClick={() => goTo(path)}
               >
                 {label}
               </button>
@@ -57,7 +62,7 @@ function Navbar({ currentPage, setPage }) {
 
         {/* ACTIONS desktop */}
         <div className="navbar-actions">
-          <button className="navbar-cta" onClick={() => navigate("members")}>
+          <button className="navbar-cta" onClick={() => goTo("/members")}>
             ☕ Coffee Members
           </button>
 
@@ -65,7 +70,7 @@ function Navbar({ currentPage, setPage }) {
             <button
               className="navbar-cta"
               style={{ background: "transparent", border: "1px solid #2a2a2a", color: "#888", marginLeft: "4px" }}
-              onClick={() => navigate("admin")}
+              onClick={() => goTo("/admin")}
             >
               ⚙ Admin
             </button>
@@ -88,11 +93,11 @@ function Navbar({ currentPage, setPage }) {
                 <p className="dropdown-email">{user.email}</p>
                 <hr className="dropdown-divider" />
                 {isAdmin && (
-                  <button className="dropdown-item" onClick={() => navigate("admin")}>
+                  <button className="dropdown-item" onClick={() => goTo("/admin")}>
                     ⚙ Panel Admin
                   </button>
                 )}
-                <button className="dropdown-item" onClick={() => navigate("members")}>
+                <button className="dropdown-item" onClick={() => goTo("/members")}>
                   ☕ Mi membresía
                 </button>
                 <button className="dropdown-item logout" onClick={handleLogout}>
@@ -102,8 +107,8 @@ function Navbar({ currentPage, setPage }) {
             </div>
           ) : (
             <button
-              className={`navbar-user-btn ${currentPage === "login" ? "active" : ""}`}
-              onClick={() => navigate("login")}
+              className={`navbar-user-btn ${currentPath === "/login" ? "active" : ""}`}
+              onClick={() => goTo("/login")}
               aria-label="Iniciar sesión"
             >
               👤
@@ -141,17 +146,17 @@ function Navbar({ currentPage, setPage }) {
           </div>
         )}
 
-        {navItems.map(({ page, label }) => (
+        {navItems.map(({ path, label }) => (
           <button
-            key={page}
-            className={`mobile-nav-btn ${currentPage === page ? "active" : ""}`}
-            onClick={() => navigate(page)}
+            key={path}
+            className={`mobile-nav-btn ${currentPath === path ? "active" : ""}`}
+            onClick={() => goTo(path)}
           >
             {label}
           </button>
         ))}
 
-        <button className="mobile-cta" onClick={() => navigate("members")}>
+        <button className="mobile-cta" onClick={() => goTo("/members")}>
           ☕ Coffee Members →
         </button>
 
@@ -160,7 +165,7 @@ function Navbar({ currentPage, setPage }) {
             Cerrar sesión
           </button>
         ) : (
-          <button className="mobile-login-btn" onClick={() => navigate("login")}>
+          <button className="mobile-login-btn" onClick={() => goTo("/login")}>
             👤 Iniciar sesión
           </button>
         )}

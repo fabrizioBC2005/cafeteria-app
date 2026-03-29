@@ -1,19 +1,12 @@
 import { useState } from "react"
 import "./Register.css"
 import { useAuth } from "../../Context/AuthContext"
+import { useNavigate } from "react-router-dom"
 
-interface RegisterProps {
-  setPage: (page: string) => void
-}
-
-function Register({ setPage }: RegisterProps) {
+function Register() {
   const { register } = useAuth()
-  const [form, setForm] = useState({
-    nombre: "",
-    email: "",
-    password: "",
-    confirm: "",
-  })
+  const navigate = useNavigate()
+  const [form, setForm] = useState({ nombre: "", email: "", password: "", confirm: "" })
   const [showPass, setShowPass]       = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [loading, setLoading]         = useState(false)
@@ -31,11 +24,7 @@ function Register({ setPage }: RegisterProps) {
     setLoading(true)
     setError("")
     try {
-      await register({
-        nombre:   form.nombre,
-        email:    form.email,
-        password: form.password,
-      })
+      await register({ nombre: form.nombre, email: form.email, password: form.password })
       setDone(true)
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { error?: string } } })
@@ -52,20 +41,19 @@ function Register({ setPage }: RegisterProps) {
     form.password.length < 6   ? 1 :
     form.password.length < 10  ? 2 : 3
 
-  const strengthLabel = ["", "Débil", "Regular", "Fuerte"]
+  const strengthLabel = ["", "Debil", "Regular", "Fuerte"]
   const strengthColor = ["", "#e74c3c", "#f39c12", "#4e6b38"]
 
   return (
     <div className="register-page">
 
-      {/* ── LADO IZQUIERDO ── */}
       <div className="register-left">
         <div className="register-left-bg" />
         <div className="register-left-content">
           <p className="register-eyebrow">LOCAFE / REGISTRO</p>
-          <h2 className="register-left-title">ÚNETE A<br /><span>COFFEE MEMBERS</span></h2>
+          <h2 className="register-left-title">UNETE A<br /><span>COFFEE MEMBERS</span></h2>
           <p className="register-left-sub">
-            Crea tu cuenta y empieza a disfrutar de una experiencia de café única.
+            Crea tu cuenta y empieza a disfrutar de una experiencia de cafe unica.
             Reservas, pedidos y beneficios exclusivos en un solo lugar.
           </p>
           <div className="register-steps-preview">
@@ -83,28 +71,25 @@ function Register({ setPage }: RegisterProps) {
         </div>
       </div>
 
-      {/* ── LADO DERECHO ── */}
       <div className="register-right">
         <div className="register-card">
 
-          {/* Logo */}
-          <div className="register-logo" onClick={() => setPage("home")}>
+          <div className="register-logo" onClick={() => navigate("/")}>
             <span className="register-logo-text">LOCA<span className="register-logo-accent">CAFE</span></span>
           </div>
 
-          {/* ── CONFIRMACIÓN ── */}
           {done ? (
             <div className="register-success">
               <div className="success-icon">✓</div>
-              <h2 className="success-title">¡Cuenta creada!</h2>
+              <h2 className="success-title">Cuenta creada!</h2>
               <p className="success-sub">
                 Bienvenido a Locafe, <strong>{form.nombre}</strong>. Tu cuenta ha sido creada exitosamente.
               </p>
-              <button className="register-submit-btn" onClick={() => setPage("home")}>
-                Ir al inicio →
+              <button className="register-submit-btn" onClick={() => navigate("/")}>
+                Ir al inicio
               </button>
-              <button className="login-link-btn" onClick={() => setPage("login")}>
-                Iniciar sesión
+              <button className="login-link-btn" onClick={() => navigate("/login")}>
+                Iniciar sesion
               </button>
             </div>
           ) : (
@@ -114,7 +99,6 @@ function Register({ setPage }: RegisterProps) {
                 <p className="register-card-sub">Completa los datos para registrarte</p>
               </div>
 
-              {/* Google */}
               <button className="google-btn">
                 <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -129,78 +113,33 @@ function Register({ setPage }: RegisterProps) {
                 <span /><p>o crea tu cuenta con correo</p><span />
               </div>
 
-              {/* Form */}
               <form onSubmit={handleSubmit} className="register-form">
-
                 <div className="register-field">
                   <label htmlFor="nombre">Nombre completo</label>
-                  <input
-                    id="nombre"
-                    name="nombre"
-                    type="text"
-                    value={form.nombre}
-                    onChange={handleChange}
-                    placeholder="Tu nombre"
-                    required
-                    autoComplete="name"
-                  />
+                  <input id="nombre" name="nombre" type="text" value={form.nombre} onChange={handleChange} placeholder="Tu nombre" required autoComplete="name" />
                 </div>
 
                 <div className="register-field">
-                  <label htmlFor="reg-email">Correo electrónico</label>
-                  <input
-                    id="reg-email"
-                    name="email"
-                    type="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder="tu@correo.com"
-                    required
-                    autoComplete="email"
-                  />
+                  <label htmlFor="reg-email">Correo electronico</label>
+                  <input id="reg-email" name="email" type="email" value={form.email} onChange={handleChange} placeholder="tu@correo.com" required autoComplete="email" />
                 </div>
 
                 <div className="register-field">
-                  <label htmlFor="reg-password">Contraseña</label>
+                  <label htmlFor="reg-password">Contrasena</label>
                   <div className="password-wrap">
-                    <input
-                      id="reg-password"
-                      name="password"
-                      type={showPass ? "text" : "password"}
-                      value={form.password}
-                      onChange={handleChange}
-                      placeholder="Mínimo 6 caracteres"
-                      required
-                      autoComplete="new-password"
-                    />
-                    <button
-                      type="button"
-                      className="toggle-pass"
-                      onClick={() => setShowPass(!showPass)}
-                    >
+                    <input id="reg-password" name="password" type={showPass ? "text" : "password"} value={form.password} onChange={handleChange} placeholder="Minimo 6 caracteres" required autoComplete="new-password" />
+                    <button type="button" className="toggle-pass" onClick={() => setShowPass(!showPass)}>
                       {showPass ? "🙈" : "👁️"}
                     </button>
                   </div>
-                  {/* Strength bar */}
                   {form.password.length > 0 && (
                     <div className="strength-wrap">
                       <div className="strength-bar">
                         {[1, 2, 3].map((n) => (
-                          <div
-                            key={n}
-                            className="strength-segment"
-                            style={{
-                              background: n <= passwordStrength
-                                ? strengthColor[passwordStrength]
-                                : "#e8e8e8"
-                            }}
-                          />
+                          <div key={n} className="strength-segment" style={{ background: n <= passwordStrength ? strengthColor[passwordStrength] : "#e8e8e8" }} />
                         ))}
                       </div>
-                      <span
-                        className="strength-label"
-                        style={{ color: strengthColor[passwordStrength] }}
-                      >
+                      <span className="strength-label" style={{ color: strengthColor[passwordStrength] }}>
                         {strengthLabel[passwordStrength]}
                       </span>
                     </div>
@@ -208,49 +147,27 @@ function Register({ setPage }: RegisterProps) {
                 </div>
 
                 <div className="register-field">
-                  <label htmlFor="confirm">Confirmar contraseña</label>
+                  <label htmlFor="confirm">Confirmar contrasena</label>
                   <div className="password-wrap">
-                    <input
-                      id="confirm"
-                      name="confirm"
-                      type={showConfirm ? "text" : "password"}
-                      value={form.confirm}
-                      onChange={handleChange}
-                      placeholder="Repite tu contraseña"
-                      required
-                      autoComplete="new-password"
-                      className={!passwordMatch ? "input-error" : ""}
-                    />
-                    <button
-                      type="button"
-                      className="toggle-pass"
-                      onClick={() => setShowConfirm(!showConfirm)}
-                    >
+                    <input id="confirm" name="confirm" type={showConfirm ? "text" : "password"} value={form.confirm} onChange={handleChange} placeholder="Repite tu contrasena" required autoComplete="new-password" className={!passwordMatch ? "input-error" : ""} />
+                    <button type="button" className="toggle-pass" onClick={() => setShowConfirm(!showConfirm)}>
                       {showConfirm ? "🙈" : "👁️"}
                     </button>
                   </div>
-                  {!passwordMatch && (
-                    <span className="field-error">Las contraseñas no coinciden</span>
-                  )}
+                  {!passwordMatch && <span className="field-error">Las contrasenas no coinciden</span>}
                 </div>
 
-                <button
-                  type="submit"
-                  className="register-submit-btn"
-                  disabled={loading || !passwordMatch}
-                >
-                  {loading ? <span className="register-spinner" /> : "Crear cuenta →"}
+                <button type="submit" className="register-submit-btn" disabled={loading || !passwordMatch}>
+                  {loading ? <span className="register-spinner" /> : "Crear cuenta"}
                 </button>
 
-                {error && <p className="login-error">⚠️ {error}</p>}
-
+                {error && <p className="login-error">{error}</p>}
               </form>
 
-              {/* Login link */}
               <div className="register-login">
-                <p>¿Ya tienes cuenta?</p>
-                <button className="login-link-btn" onClick={() => setPage("login")}>
-                  Inicia sesión →
+                <p>Ya tienes cuenta?</p>
+                <button className="login-link-btn" onClick={() => navigate("/login")}>
+                  Inicia sesion
                 </button>
               </div>
             </>

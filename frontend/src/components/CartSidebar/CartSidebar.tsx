@@ -1,16 +1,14 @@
 import { useCart } from "../../Context/CartContext"
 import "./CartSidebar.css"
+import { useNavigate } from "react-router-dom"
 
-interface CartSidebarProps {
-  setPage: (page: string) => void
-}
-
-function CartSidebar({ setPage }: CartSidebarProps) {
+function CartSidebar() {
   const { items, isOpen, closeCart, removeItem, updateQty, total, count } = useCart()
+  const navigate = useNavigate()
 
   const handleCheckout = () => {
     closeCart()
-    setPage("checkout")
+    navigate("/checkout")
   }
 
   return (
@@ -43,7 +41,7 @@ function CartSidebar({ setPage }: CartSidebarProps) {
             <div className="cart-empty">
               <span className="cart-empty-icon">☕</span>
               <p>Tu carrito está vacío</p>
-              <button className="cart-browse-btn" onClick={() => { closeCart(); setPage("menu") }}>
+              <button className="cart-browse-btn" onClick={() => { closeCart(); navigate("/menu") }}>
                 Ver menú →
               </button>
             </div>

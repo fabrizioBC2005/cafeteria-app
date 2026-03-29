@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react"
+import { useEffect } from "react"
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom"
 import { CartProvider } from "./Context/CartContext"
 import { AuthProvider, useAuth } from "./Context/AuthContext"
 import Navbar from "./components/Navbar/Navbar"
@@ -16,94 +17,60 @@ import Members from "./pages/Members/Members"
 import Checkout from "./pages/Checkout/Checkout"
 import Admin from "./pages/Admin/Admin"
 
-const VALID_PAGES = ["home", "menu", "reservas", "blog", "galeria", "contact", "login", "register", "members", "checkout", "admin"]
-
-const getInitialPage = () => {
-  const path = window.location.pathname.replace("/", "").toLowerCase()
-  return VALID_PAGES.includes(path) ? path : "home"
-}
-
-function AppInner() {
-  const [currentPage, setCurrentPage] = useState(getInitialPage)
-  const { isAdmin } = useAuth()
-  const isFirstRender = useRef(true)
-
-  // Scroll al inicio al cambiar de página
+// Scroll al inicio en cada cambio de ruta
+const ScrollToTop = () => {
+  const { pathname } = useLocation()
   useEffect(() => {
     window.scrollTo(0, 0)
-  }, [currentPage])
+  }, [pathname])
+  return null
+}
 
-  // Actualiza la URL al cambiar de página
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false
-      window.history.replaceState(
-        { page: currentPage },
-        "",
-        `/${currentPage === "home" ? "" : currentPage}`
-      )
-      return
-    }
-    window.history.pushState(
-      { page: currentPage },
-      "",
-      `/${currentPage === "home" ? "" : currentPage}`
-    )
-  }, [currentPage])
+// Protege rutas de admin
+const AdminRoute = () => {
+  const { isAdmin } = useAuth()
+  return isAdmin ? <Admin /> : <Navigate to="/login" replace />
+}
 
-  // Maneja el botón retroceso/avance del navegador
-  useEffect(() => {
-    const handlePopState = (e) => {
-      if (e.state?.page) {
-        setCurrentPage(e.state.page)
-      } else {
-        const path = window.location.pathname.replace("/", "").toLowerCase()
-        setCurrentPage(VALID_PAGES.includes(path) ? path : "home")
-      }
-    }
-    window.addEventListener("popstate", handlePopState)
-    return () => window.removeEventListener("popstate", handlePopState)
-  }, [])
+const noFooterRoutes = ["/reservas", "/checkout", "/admin"]
 
-  const renderPage = () => {
-    switch (currentPage) {
-      case "home":     return <Home setPage={setCurrentPage} />
-      case "menu":     return <Menu />
-      case "reservas": return <Reservas />
-      case "blog":     return <Blog />
-      case "galeria":  return <Galeria setPage={setCurrentPage} />
-      case "contact":  return <Contact />
-      case "login":    return <Login setPage={setCurrentPage} />
-      case "register": return <Register setPage={setCurrentPage} />
-      case "members":  return <Members setPage={setCurrentPage} />
-      case "checkout": return <Checkout setPage={setCurrentPage} />
-      case "admin":
-        return isAdmin
-          ? <Admin setPage={setCurrentPage} />
-          : <Login setPage={setCurrentPage} />
-      default: return <Home setPage={setCurrentPage} />
-    }
-  }
-
-  const noFooter = ["reservas", "checkout", "admin"]
+const Layout = () => {
+  const location = useLocation()
+  const showFooter = !noFooterRoutes.includes(location.pathname)
 
   return (
     <div style={{ background: "#0d0d0d", minHeight: "100vh" }}>
-      <Navbar currentPage={currentPage} setPage={setCurrentPage} />
-      <CartSidebar setPage={setCurrentPage} />
-      {renderPage()}
-      {!noFooter.includes(currentPage) && <Footer setPage={setCurrentPage} />}
+      <ScrollToTop />
+      <Navbar />
+      <CartSidebar />
+      <Routes>
+        <Route path="/"          element={<Home />} />
+        <Route path="/menu"      element={<Menu />} />
+        <Route path="/reservas"  element={<Reservas />} />
+        <Route path="/blog"      element={<Blog />} />
+        <Route path="/galeria"   element={<Galeria />} />
+        <Route path="/contact"   element={<Contact />} />
+        <Route path="/login"     element={<Login />} />
+        <Route path="/register"  element={<Register />} />
+        <Route path="/members"   element={<Members />} />
+        <Route path="/checkout"  element={<Checkout />} />
+        <Route path="/admin"     element={<AdminRoute />} />
+        <Route path="*"          element={<Navigate to="/" replace />} />
+      </Routes>
+      {showFooter && <Footer />}
     </div>
   )
 }
 
 function App() {
   return (
-    <AuthProvider>
-      <CartProvider>
-        <AppInner />
-      </CartProvider>
-    </AuthProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <CartProvider>
+          <Layout />
+        </CartProvider>
+      </AuthProvider>
+    </BrowserRouter>
   )
 }
 

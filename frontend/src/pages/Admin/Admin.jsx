@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
 import "./Admin.css"
 import { adminService, productosService, pedidosService, reservasService } from "../../services/api.ts"
+import { useNavigate } from "react-router-dom"
 
 /* ── CONSTANTES ── */
 const STATUS_COLORS = {
@@ -21,7 +22,6 @@ const EMPTY_PRODUCT = {
   descripcion: "", origen: "", peso: "", destacado: false, activo: true
 }
 
-/* ── COMPONENTES PEQUEÑOS ── */
 function StatCard({ icon, label, value, sub, color }) {
   return (
     <div className="stat-card" style={{ "--accent": color }}>
@@ -45,7 +45,6 @@ function StatusBadge({ status }) {
   )
 }
 
-/* ── MODAL PRODUCTO ── */
 function ProductModal({ product, categorias, onSave, onClose }) {
   const [form, setForm] = useState(product || EMPTY_PRODUCT)
   const isNew = !product?.id
@@ -62,11 +61,8 @@ function ProductModal({ product, categorias, onSave, onClose }) {
           <h2>{isNew ? "Nuevo producto" : "Editar producto"}</h2>
           <button className="modal-close" onClick={onClose}>✕</button>
         </div>
-
         <div className="modal-body">
-          {form.imagen && (
-            <img src={form.imagen} alt="preview" className="modal-preview" />
-          )}
+          {form.imagen && <img src={form.imagen} alt="preview" className="modal-preview" />}
           <div className="modal-grid">
             <div className="modal-field modal-field--full">
               <label>Nombre *</label>
@@ -81,9 +77,9 @@ function ProductModal({ product, categorias, onSave, onClose }) {
               <input name="stock" type="number" value={form.stock} onChange={handle} placeholder="0" />
             </div>
             <div className="modal-field">
-              <label>Categoría</label>
+              <label>Categoria</label>
               <select name="categoria_id" value={form.categoria_id || ""} onChange={handle}>
-                <option value="">Sin categoría</option>
+                <option value="">Sin categoria</option>
                 {categorias.map(c => (
                   <option key={c.id} value={c.id}>{c.nombre}</option>
                 ))}
@@ -91,15 +87,15 @@ function ProductModal({ product, categorias, onSave, onClose }) {
             </div>
             <div className="modal-field">
               <label>Origen</label>
-              <input name="origen" value={form.origen || ""} onChange={handle} placeholder="Colombia, Perú..." />
+              <input name="origen" value={form.origen || ""} onChange={handle} placeholder="Colombia, Peru..." />
             </div>
             <div className="modal-field">
               <label>Peso</label>
               <input name="peso" value={form.peso || ""} onChange={handle} placeholder="250g, 500ml..." />
             </div>
             <div className="modal-field modal-field--full">
-              <label>Descripción</label>
-              <input name="descripcion" value={form.descripcion || ""} onChange={handle} placeholder="Descripción breve..." />
+              <label>Descripcion</label>
+              <input name="descripcion" value={form.descripcion || ""} onChange={handle} placeholder="Descripcion breve..." />
             </div>
             <div className="modal-field modal-field--full">
               <label>URL imagen</label>
@@ -115,13 +111,12 @@ function ProductModal({ product, categorias, onSave, onClose }) {
             <div className="modal-field">
               <label>Destacado</label>
               <select name="destacado" value={String(form.destacado)} onChange={e => setForm({ ...form, destacado: e.target.value === "true" })}>
-                <option value="true">Sí</option>
+                <option value="true">Si</option>
                 <option value="false">No</option>
               </select>
             </div>
           </div>
         </div>
-
         <div className="modal-footer">
           <button className="modal-cancel" onClick={onClose}>Cancelar</button>
           <button className="modal-save" onClick={() => onSave(form)}>
@@ -133,23 +128,19 @@ function ProductModal({ product, categorias, onSave, onClose }) {
   )
 }
 
-/* ══════════════════════════════════════
-   COMPONENTE PRINCIPAL
-══════════════════════════════════════ */
-function Admin({ setPage }) {
+function Admin() {
+  const navigate = useNavigate()
   const [tab, setTab]           = useState("dashboard")
   const [loading, setLoading]   = useState(true)
   const [toast, setToast]       = useState(null)
 
-  // Data del backend
-  const [stats, setStats]         = useState(null)
-  const [products, setProducts]   = useState([])
+  const [stats, setStats]           = useState(null)
+  const [products, setProducts]     = useState([])
   const [categorias, setCategorias] = useState([])
-  const [orders, setOrders]       = useState([])
-  const [reservas, setReservas]   = useState([])
-  const [usuarios, setUsuarios]   = useState([])
+  const [orders, setOrders]         = useState([])
+  const [reservas, setReservas]     = useState([])
+  const [usuarios, setUsuarios]     = useState([])
 
-  // UI
   const [editProduct, setEditProduct] = useState(null)
   const [searchProd,  setSearchProd]  = useState("")
   const [searchOrd,   setSearchOrd]   = useState("")
@@ -160,7 +151,6 @@ function Admin({ setPage }) {
     setTimeout(() => setToast(null), 2800)
   }
 
-  /* ── FETCH DATA ── */
   const fetchAll = useCallback(async () => {
     setLoading(true)
     try {
@@ -188,15 +178,14 @@ function Admin({ setPage }) {
 
   useEffect(() => { fetchAll() }, [fetchAll])
 
-  /* ── PRODUCTOS ── */
   const saveProduct = async (form) => {
     try {
       if (!editProduct?.id) {
         await productosService.create(form)
-        showToast("Producto creado ✓")
+        showToast("Producto creado")
       } else {
         await productosService.update(editProduct.id, form)
-        showToast("Producto actualizado ✓")
+        showToast("Producto actualizado")
       }
       setEditProduct(null)
       const res = await productosService.getAll({ limit: 100 })
@@ -207,7 +196,7 @@ function Admin({ setPage }) {
   }
 
   const deleteProduct = async (id) => {
-    if (!confirm("¿Eliminar este producto?")) return
+    if (!confirm("Eliminar este producto?")) return
     try {
       await productosService.delete(id)
       setProducts(p => p.filter(x => x.id !== id))
@@ -226,29 +215,26 @@ function Admin({ setPage }) {
     }
   }
 
-  /* ── PEDIDOS ── */
   const updateOrderStatus = async (id, estado) => {
     try {
       await pedidosService.updateEstado(id, estado)
       setOrders(o => o.map(x => x.id === id ? { ...x, estado } : x))
-      showToast(`Pedido actualizado → ${estado}`)
+      showToast("Pedido actualizado")
     } catch {
       showToast("Error al actualizar pedido", "danger")
     }
   }
 
-  /* ── RESERVAS ── */
   const updateReservaStatus = async (id, estado) => {
     try {
       await reservasService.updateEstado(id, estado)
       setReservas(r => r.map(x => x.id === id ? { ...x, estado } : x))
-      showToast(`Reserva actualizada → ${estado}`)
+      showToast("Reserva actualizada")
     } catch {
       showToast("Error al actualizar reserva", "danger")
     }
   }
 
-  /* ── USUARIOS ── */
   const toggleUsuario = async (id) => {
     try {
       const { data } = await adminService.toggleUsuario(id)
@@ -260,7 +246,7 @@ function Admin({ setPage }) {
   }
 
   const deleteUsuario = async (id, nombre) => {
-    if (!confirm(`¿Eliminar al usuario "${nombre}"? Esta acción no se puede deshacer.`)) return
+    if (!confirm(`Eliminar al usuario "${nombre}"?`)) return
     try {
       await adminService.deleteUsuario(id)
       setUsuarios(u => u.filter(x => x.id !== id))
@@ -270,7 +256,6 @@ function Admin({ setPage }) {
     }
   }
 
-  /* ── FILTROS ── */
   const filteredProds = products.filter(p =>
     p.nombre.toLowerCase().includes(searchProd.toLowerCase())
   )
@@ -282,7 +267,6 @@ function Admin({ setPage }) {
     return matchSearch && matchFilter
   })
 
-  /* ── STATS CALCULADAS ── */
   const pedidosPend = orders.filter(o => ["pendiente","preparando","listo"].includes(o.estado)).length
   const resPend     = reservas.filter(r => r.estado === "pendiente").length
 
@@ -299,17 +283,14 @@ function Admin({ setPage }) {
 
   return (
     <div className="admin-page">
-
-      {/* TOAST */}
       {toast && (
         <div className={`admin-toast ${toast.type}`}>
           {toast.type === "success" ? "✓" : "✕"} {toast.msg}
         </div>
       )}
 
-      {/* SIDEBAR */}
       <aside className="admin-sidebar">
-        <div className="admin-brand" onClick={() => setPage("home")}>
+        <div className="admin-brand" onClick={() => navigate("/")}>
           <span className="admin-brand-logo">LC</span>
           <div>
             <p className="admin-brand-name">LOCAFE</p>
@@ -338,15 +319,12 @@ function Admin({ setPage }) {
           ))}
         </nav>
 
-        <button className="admin-back-btn" onClick={() => setPage("home")}>
-          ← Volver al sitio
+        <button className="admin-back-btn" onClick={() => navigate("/")}>
+          Volver al sitio
         </button>
       </aside>
 
-      {/* MAIN */}
       <main className="admin-main">
-
-        {/* ══ DASHBOARD ══ */}
         {tab === "dashboard" && (
           <div className="admin-section">
             <div className="admin-page-header">
@@ -358,19 +336,16 @@ function Admin({ setPage }) {
                 {new Date().toLocaleDateString("es-PE", { weekday:"long", day:"numeric", month:"long" })}
               </p>
             </div>
-
             <div className="stats-grid">
-              <StatCard icon="💰" label="Ventas del mes"       value={`S/ ${stats?.ingresos_mes?.toFixed(2) || "0.00"}`} sub="Pedidos confirmados"  color="#4ade80" />
-              <StatCard icon="📦" label="Pedidos activos"      value={pedidosPend}                                       sub="pendiente/preparando" color="#60a5fa" />
-              <StatCard icon="☕" label="Productos activos"    value={products.filter(p => p.activo).length}             sub={`de ${products.length} totales`} color="#fbbf24" />
-              <StatCard icon="📅" label="Reservas pendientes"  value={resPend}                                           sub="por confirmar"         color="#c084fc" />
+              <StatCard icon="💰" label="Ventas del mes"      value={`S/ ${stats?.ingresos_mes?.toFixed(2) || "0.00"}`} sub="Pedidos confirmados"  color="#4ade80" />
+              <StatCard icon="📦" label="Pedidos activos"     value={pedidosPend}                                       sub="pendiente/preparando" color="#60a5fa" />
+              <StatCard icon="☕" label="Productos activos"   value={products.filter(p => p.activo).length}             sub={`de ${products.length} totales`} color="#fbbf24" />
+              <StatCard icon="📅" label="Reservas pendientes" value={resPend}                                           sub="por confirmar"         color="#c084fc" />
             </div>
-
-            {/* Últimos pedidos */}
             <div className="dash-section">
               <div className="dash-section-header">
-                <h2>Últimos pedidos</h2>
-                <button onClick={() => setTab("pedidos")} className="dash-link">Ver todos →</button>
+                <h2>Ultimos pedidos</h2>
+                <button onClick={() => setTab("pedidos")} className="dash-link">Ver todos</button>
               </div>
               <div className="admin-table-wrap">
                 <table className="admin-table">
@@ -390,12 +365,10 @@ function Admin({ setPage }) {
                 </table>
               </div>
             </div>
-
-            {/* Reservas recientes */}
             <div className="dash-section">
               <div className="dash-section-header">
                 <h2>Reservas recientes</h2>
-                <button onClick={() => setTab("reservas")} className="dash-link">Ver todas →</button>
+                <button onClick={() => setTab("reservas")} className="dash-link">Ver todas</button>
               </div>
               <div className="reservas-list">
                 {reservas.slice(0,3).map(r => (
@@ -418,7 +391,6 @@ function Admin({ setPage }) {
           </div>
         )}
 
-        {/* ══ PRODUCTOS ══ */}
         {tab === "productos" && (
           <div className="admin-section">
             <div className="admin-page-header">
@@ -430,17 +402,10 @@ function Admin({ setPage }) {
                 + Nuevo producto
               </button>
             </div>
-
             <div className="admin-toolbar">
-              <input
-                className="admin-search"
-                placeholder="Buscar producto..."
-                value={searchProd}
-                onChange={e => setSearchProd(e.target.value)}
-              />
+              <input className="admin-search" placeholder="Buscar producto..." value={searchProd} onChange={e => setSearchProd(e.target.value)} />
               <span className="admin-count">{filteredProds.length} productos</span>
             </div>
-
             <div className="products-admin-grid">
               {filteredProds.map(p => (
                 <div key={p.id} className={`prod-admin-card ${!p.activo ? "inactive" : ""}`}>
@@ -454,16 +419,12 @@ function Admin({ setPage }) {
                     <h3 className="prod-admin-name">{p.nombre}</h3>
                     <div className="prod-admin-meta">
                       <span className="prod-admin-price">S/ {parseFloat(p.precio).toFixed(2)}</span>
-                      <span className={`prod-admin-stock ${p.stock < 15 ? "low" : ""}`}>
-                        Stock: {p.stock}
-                      </span>
+                      <span className={`prod-admin-stock ${p.stock < 15 ? "low" : ""}`}>Stock: {p.stock}</span>
                     </div>
                   </div>
                   <div className="prod-admin-actions">
                     <button className="prod-action-btn edit"   onClick={() => setEditProduct(p)}   title="Editar">✎</button>
-                    <button className="prod-action-btn toggle" onClick={() => toggleProduct(p)}    title={p.activo ? "Desactivar" : "Activar"}>
-                      {p.activo ? "●" : "○"}
-                    </button>
+                    <button className="prod-action-btn toggle" onClick={() => toggleProduct(p)}    title={p.activo ? "Desactivar" : "Activar"}>{p.activo ? "●" : "○"}</button>
                     <button className="prod-action-btn delete" onClick={() => deleteProduct(p.id)} title="Eliminar">✕</button>
                   </div>
                 </div>
@@ -472,7 +433,6 @@ function Admin({ setPage }) {
           </div>
         )}
 
-        {/* ══ PEDIDOS ══ */}
         {tab === "pedidos" && (
           <div className="admin-section">
             <div className="admin-page-header">
@@ -481,34 +441,18 @@ function Admin({ setPage }) {
                 <h1 className="admin-title">Pedidos</h1>
               </div>
             </div>
-
             <div className="admin-toolbar">
-              <input
-                className="admin-search"
-                placeholder="Buscar orden o cliente..."
-                value={searchOrd}
-                onChange={e => setSearchOrd(e.target.value)}
-              />
+              <input className="admin-search" placeholder="Buscar orden o cliente..." value={searchOrd} onChange={e => setSearchOrd(e.target.value)} />
               <div className="filter-tabs">
                 {["todos","pendiente","confirmado","preparando","listo","entregado","cancelado"].map(f => (
-                  <button
-                    key={f}
-                    className={`filter-tab ${filterOrd === f ? "active" : ""}`}
-                    onClick={() => setFilterOrd(f)}
-                  >
-                    {f}
-                  </button>
+                  <button key={f} className={`filter-tab ${filterOrd === f ? "active" : ""}`} onClick={() => setFilterOrd(f)}>{f}</button>
                 ))}
               </div>
             </div>
-
             <div className="admin-table-wrap">
               <table className="admin-table orders-table">
                 <thead>
-                  <tr>
-                    <th>Orden</th><th>Cliente</th><th>Total</th>
-                    <th>Pago</th><th>Estado</th><th>Acción</th>
-                  </tr>
+                  <tr><th>Orden</th><th>Cliente</th><th>Total</th><th>Pago</th><th>Estado</th><th>Accion</th></tr>
                 </thead>
                 <tbody>
                   {filteredOrds.map(o => (
@@ -522,11 +466,7 @@ function Admin({ setPage }) {
                       <td><span className="pay-chip">{o.metodo_pago}</span></td>
                       <td><StatusBadge status={o.estado} /></td>
                       <td>
-                        <select
-                          className="status-select"
-                          value={o.estado}
-                          onChange={e => updateOrderStatus(o.id, e.target.value)}
-                        >
+                        <select className="status-select" value={o.estado} onChange={e => updateOrderStatus(o.id, e.target.value)}>
                           {["pendiente","confirmado","preparando","listo","entregado","cancelado"].map(s => (
                             <option key={s} value={s}>{s}</option>
                           ))}
@@ -537,14 +477,10 @@ function Admin({ setPage }) {
                 </tbody>
               </table>
             </div>
-
-            {filteredOrds.length === 0 && (
-              <div className="admin-empty"><p>No hay pedidos con ese filtro</p></div>
-            )}
+            {filteredOrds.length === 0 && <div className="admin-empty"><p>No hay pedidos con ese filtro</p></div>}
           </div>
         )}
 
-        {/* ══ RESERVAS ══ */}
         {tab === "reservas" && (
           <div className="admin-section">
             <div className="admin-page-header">
@@ -553,7 +489,6 @@ function Admin({ setPage }) {
                 <h1 className="admin-title">Reservas</h1>
               </div>
             </div>
-
             <div className="reservas-admin-list">
               {reservas.map(r => (
                 <div key={r.id} className="reserva-admin-card">
@@ -568,7 +503,6 @@ function Admin({ setPage }) {
                       <p className="res-phone">{r.telefono}</p>
                     </div>
                   </div>
-
                   <div className="reserva-admin-mid">
                     <div className="res-detail-chips">
                       <span className="res-chip">Mesa {r.mesa_id}</span>
@@ -577,37 +511,20 @@ function Admin({ setPage }) {
                     </div>
                     <span className="res-occasion">{r.ocasion}</span>
                   </div>
-
                   <div className="reserva-admin-right">
                     <StatusBadge status={r.estado} />
                     <div className="res-actions">
-                      <button
-                        className="res-action-btn confirm"
-                        onClick={() => updateReservaStatus(r.id, "confirmada")}
-                        disabled={r.estado === "confirmada"}
-                      >
-                        ✓ Confirmar
-                      </button>
-                      <button
-                        className="res-action-btn cancel"
-                        onClick={() => updateReservaStatus(r.id, "cancelada")}
-                        disabled={r.estado === "cancelada"}
-                      >
-                        ✕ Cancelar
-                      </button>
+                      <button className="res-action-btn confirm" onClick={() => updateReservaStatus(r.id, "confirmada")} disabled={r.estado === "confirmada"}>Confirmar</button>
+                      <button className="res-action-btn cancel"  onClick={() => updateReservaStatus(r.id, "cancelada")}  disabled={r.estado === "cancelada"}>Cancelar</button>
                     </div>
                   </div>
                 </div>
               ))}
-
-              {reservas.length === 0 && (
-                <div className="admin-empty"><p>No hay reservas registradas</p></div>
-              )}
+              {reservas.length === 0 && <div className="admin-empty"><p>No hay reservas registradas</p></div>}
             </div>
           </div>
         )}
 
-        {/* ══ USUARIOS ══ */}
         {tab === "usuarios" && (
           <div className="admin-section">
             <div className="admin-page-header">
@@ -617,60 +534,38 @@ function Admin({ setPage }) {
               </div>
               <span className="admin-count">{usuarios.length} usuarios</span>
             </div>
-
             <div className="admin-table-wrap">
               <table className="admin-table">
                 <thead>
-                  <tr>
-                    <th>Nombre</th><th>Email</th><th>Rol</th>
-                    <th>Membresía</th><th>Estado</th><th>Acción</th>
-                  </tr>
+                  <tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Membresia</th><th>Estado</th><th>Accion</th></tr>
                 </thead>
                 <tbody>
                   {usuarios.map(u => (
                     <tr key={u.id}>
                       <td>
                         <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-                          <div style={{
-                            width:30, height:30, borderRadius:"50%",
-                            background:"#8BC34A", color:"#0d0d0d",
-                            display:"flex", alignItems:"center", justifyContent:"center",
-                            fontWeight:800, fontSize:12, flexShrink:0
-                          }}>
+                          <div style={{ width:30, height:30, borderRadius:"50%", background:"#8BC34A", color:"#0d0d0d", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:800, fontSize:12, flexShrink:0 }}>
                             {u.nombre?.charAt(0).toUpperCase()}
                           </div>
                           <span className="order-customer">{u.nombre}</span>
                         </div>
                       </td>
                       <td style={{ color:"#666", fontSize:12 }}>{u.email}</td>
-                      <td>
-                        <span className="pay-chip" style={{ color: u.rol === "admin" ? "#fbbf24" : "#888" }}>
-                          {u.rol}
-                        </span>
-                      </td>
+                      <td><span className="pay-chip" style={{ color: u.rol === "admin" ? "#fbbf24" : "#888" }}>{u.rol}</span></td>
                       <td>
                         {u.membresia_plan
                           ? <StatusBadge status={u.membresia_activa ? "confirmada" : "cancelada"} />
-                          : <span style={{ color:"#444", fontSize:12 }}>Sin membresía</span>
-                        }
+                          : <span style={{ color:"#444", fontSize:12 }}>Sin membresia</span>}
                       </td>
                       <td><StatusBadge status={u.activo ? "confirmado" : "cancelado"} /></td>
                       <td>
                         {u.rol !== "admin" && (
                           <div style={{ display:"flex", gap:8 }}>
-                            <button
-                              className={`res-action-btn ${u.activo ? "cancel" : "confirm"}`}
-                              style={{ fontSize:11, padding:"5px 12px" }}
-                              onClick={() => toggleUsuario(u.id)}
-                            >
+                            <button className={`res-action-btn ${u.activo ? "cancel" : "confirm"}`} style={{ fontSize:11, padding:"5px 12px" }} onClick={() => toggleUsuario(u.id)}>
                               {u.activo ? "Desactivar" : "Activar"}
                             </button>
-                            <button
-                              className="res-action-btn cancel"
-                              style={{ fontSize:11, padding:"5px 12px" }}
-                              onClick={() => deleteUsuario(u.id, u.nombre)}
-                            >
-                              🗑 Eliminar
+                            <button className="res-action-btn cancel" style={{ fontSize:11, padding:"5px 12px" }} onClick={() => deleteUsuario(u.id, u.nombre)}>
+                              Eliminar
                             </button>
                           </div>
                         )}
@@ -682,10 +577,8 @@ function Admin({ setPage }) {
             </div>
           </div>
         )}
-
       </main>
 
-      {/* MODAL PRODUCTO */}
       {editProduct !== null && (
         <ProductModal
           product={editProduct?.id ? editProduct : null}
